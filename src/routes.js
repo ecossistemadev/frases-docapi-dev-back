@@ -1,5 +1,5 @@
 function routes(app) {
-    app.use('/frase', require('./routes/frases.js'));
+    app.use('/frase', require('./routes/frase.js'));
     return;
 }
 
