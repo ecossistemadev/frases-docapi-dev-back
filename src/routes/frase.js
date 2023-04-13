@@ -8,8 +8,8 @@ const router = express.Router();
 router.post('/criar', conectarBancoDados, async function (req, res) {
   try {
     // #swagger.tags = ['Frase']
-    let { posicao, titulo, descricao, status, dataEntrega } = req.body;
-    const respostaBD = await EsquemaFrase.create({ posicao, titulo, descricao, status, dataEntrega });
+    let { frase, nomeAutor } = req.body;
+    const respostaBD = await EsquemaFrase.create({ frase, nomeAutor });
 
     res.status(200).json({
       status: "OK",
@@ -26,17 +26,17 @@ router.post('/criar', conectarBancoDados, async function (req, res) {
 router.put('/editar/:id', conectarBancoDados, async function (req, res) {
   try {
     // #swagger.tags = ['Frase']
-    let idFrases = req.params.id;
-    let { posicao, titulo, descricao, status, dataEntrega } = req.body;
+    let idFrase = req.params.id;
+    let { frase, nomeAutor } = req.body;
 
-    const checkFrases = await EsquemaFrase.findOne({ _id: idFrases });
+    const checkFrases = await EsquemaFrase.findOne({ _id: idFrase });
     if (!checkFrases) {
       throw new Error("Frase não encontrada ou pertence a outro usuário");
     }
 
-    const tarefaAtualizada = await EsquemaFrase.updateOne({ _id: idFrases }, { posicao, titulo, descricao, status, dataEntrega });
+    const tarefaAtualizada = await EsquemaFrase.updateOne({ _id: idFrase }, { frase, nomeAutor });
     if (tarefaAtualizada?.modifiedCount > 0) {
-      const dadosFrase = await EsquemaFrase.findOne({ _id: idFrases })
+      const dadosFrase = await EsquemaFrase.findOne({ _id: idFrase })
       res.status(200).json({
         status: "OK",
         statusMensagem: "Frase atualizada com sucesso.",
@@ -52,7 +52,10 @@ router.put('/editar/:id', conectarBancoDados, async function (req, res) {
 router.get('/obter', conectarBancoDados, async function (req, res) {
   try {
     // #swagger.tags = ['Frase']
-    // #swagger.description = "Endpoint para obter todas frases do usuario logado."
+    // #swagger.description = "Endpoint para obter todas frases."
+
+    const respostaBD = await EsquemaFrase.find();
+
     res.status(200).json({
       status: "OK",
       statusMensagem: "Frases listadas na resposta com sucesso.",
@@ -64,6 +67,25 @@ router.get('/obter', conectarBancoDados, async function (req, res) {
   }
 });
 
+
+router.get('/obter/autor/:nomeAutor', conectarBancoDados, async function (req, res) {
+  try {
+    // #swagger.tags = ['Frase']
+    // #swagger.description = "Endpoint para obter todas frases do usuario logado."
+    let { nomeAutor } = req.params;
+
+    const respostaBD = await EsquemaFrase.find({ nomeAutor });
+
+    res.status(200).json({
+      status: "OK",
+      statusMensagem: "Frases listadas na resposta com sucesso.",
+      resposta: respostaBD
+    })
+
+  } catch (error) {
+    return tratarErrosEsperados(res, error);
+  }
+});
 
 router.delete('/deletar/:id', conectarBancoDados, async function (req, res) {
   try {

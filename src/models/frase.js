@@ -6,11 +6,9 @@ const esquema = new mongoose.Schema(
       type: String,
       required: 'é obrigatório!',
     },
-    autor:{
-      nome:{
-        type: String,
-        default: 'Anônimo',
-      }
+    nomeAutor: {
+      type: String,
+      default: 'Anônimo',
     }
   },
   {
