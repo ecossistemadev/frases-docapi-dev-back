@@ -68,17 +68,17 @@ router.get('/obter', conectarBancoDados, async function (req, res) {
 });
 
 
-router.get('/obter/autor/:nomeAutor', conectarBancoDados, async function (req, res) {
+router.get('/obter/:id', conectarBancoDados, async function (req, res) {
   try {
     // #swagger.tags = ['Frase']
     // #swagger.description = "Endpoint para obter todas frases do usuario logado."
-    let { nomeAutor } = req.params;
+    let { id } = req.params;
 
-    const respostaBD = await EsquemaFrase.find({ nomeAutor });
+    const respostaBD = await EsquemaFrase.find({ _id: id });
 
     res.status(200).json({
       status: "OK",
-      statusMensagem: "Frases listadas na resposta com sucesso.",
+      statusMensagem: "Frase listada na resposta com sucesso.",
       resposta: respostaBD
     })
 
